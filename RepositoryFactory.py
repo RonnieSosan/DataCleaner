@@ -45,7 +45,7 @@ def LeftJoin(conn, Table1, Table2, Key):
     :Key: ID for table join
     :return: Dataframe
     """
-    query = 'SELECT Player.id, STAT.overall_rating, STAT.potential, STAT.stamina FROM {0} Player LEFT JOIN {1} STAT ON {0}.{2} = STAT.{2}'.format(Table1, Table2, Key)
+    query = 'SELECT Player.id, Player.player_name, Player.birthday, Player.height, Player.weight, STAT.overall_rating, STAT.potential, STAT.stamina, STAT.crossing, STAT.finishing, STAT.heading_accuracy, STAT.short_passing, STAT.long_passing FROM {0} Player LEFT JOIN {1} STAT ON {0}.{2} = STAT.{2}'.format(Table1, Table2, Key)
     sqlitecur = conn.cursor()
     query_result = sqlitecur.execute(query)
 

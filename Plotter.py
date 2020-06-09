@@ -104,3 +104,10 @@ def plot_Correlation(DataFrame):
             xticklabels=playerCorrelation.columns.values,
             yticklabels=playerCorrelation.columns.values)
 
+def scatterPlot(x_Axis, y_Axis, DataFrame):
+    plot_Title = "{0} vs {1}".format(x_Axis, y_Axis)
+    plt.scatter(DataFrame[x_Axis], DataFrame[y_Axis])
+    plt.xlabel(x_Axis)
+    plt.ylabel(y_Axis)
+    plt.title(plot_Title)
+
