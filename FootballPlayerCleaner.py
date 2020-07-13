@@ -2,7 +2,7 @@ import sqlite3
 import RepositoryFactory as RepoFactory
 import Plotter as plotLib
 import Analysis as analysis
-Cleaning the fifaCimport pandas as pd
+import pandas as pd
 import DataCleaner as dc
 import csv
 
