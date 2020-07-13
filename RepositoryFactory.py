@@ -1,6 +1,7 @@
 import sqlite3
 import json
 import pandas as pd
+import numpy as np
 import matplotlib.pyplot as plt
 
 
@@ -26,10 +27,12 @@ def select_all(conn, player_name):
     :return: DataFrame
     """
     query = 'SELECT * FROM Player'
+     
     sqlitecur = conn.cursor()
     query_result = sqlitecur.execute(query)
     
     playerList = [dict(zip([key[0] for key in sqlitecur.description],row)) for row in query_result]
+    playerList['Position'] = []
     
     jsonList = json.dumps(playerList)
 
@@ -45,12 +48,24 @@ def LeftJoin(conn, Table1, Table2, Key):
     :Key: ID for table join
     :return: Dataframe
     """
-    query = 'SELECT Player.id, Player.player_name, Player.birthday, Player.height, Player.weight, STAT.overall_rating, STAT.potential, STAT.stamina, STAT.crossing, STAT.finishing, STAT.heading_accuracy, STAT.short_passing, STAT.long_passing FROM {0} Player LEFT JOIN {1} STAT ON {0}.{2} = STAT.{2}'.format(Table1, Table2, Key)
+
+    with sqlite3.connect(r'c:\Users\sosan\Documents\Dissertation\DataSets\Season 16-18\database.sqlite') as con:
+        player = pd.read_sql_query("SELECT * from Player",con)
+        attributes = pd.read_sql_query("SELECT * from Player_Attributes",con)
+
+        player_attributes = player.merge(attributes,left_on="player_api_id",right_on="player_api_id",how="outer")
+        player_attributes = player_attributes.drop("player_fifa_api_id_y",axis = 1)
+        player_attributes = player_attributes.drop("id_y",axis = 1)
+        player_attributes = player_attributes.rename(columns={'id_x':"id", 'player_fifa_api_id_x':"player_api_id"})
+        print(player_attributes.head())
+       
+    query = 'SELECT * FROM {0} Player LEFT JOIN {1} STAT ON {0}.{2} = STAT.{2} Where STAT.overall_rating >= 85'.format(Table1, Table2, Key)
     sqlitecur = conn.cursor()
     query_result = sqlitecur.execute(query)
 
-    playerList = playerList = [dict(zip([key[0] for key in sqlitecur.description],row)) for row in query_result]   
+    playerList = [dict(zip([key[0] for key in sqlitecur.description],row)) for row in query_result]   
     
-    dataFrame = pd.DataFrame(playerList).head(10)
+    dataFrame = pd.DataFrame(playerList)
+    dataFrame['Position'] = np.nan
     
     return dataFrame

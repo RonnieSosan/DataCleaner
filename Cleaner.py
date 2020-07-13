@@ -2,13 +2,33 @@ import csv
 import pandas as pd
 
 with open(r'C:\Users\sosan\Documents\Dissertation\DataSets\Football Manager.csv',encoding='utf-8') as file:
-  with open(r'C:\Users\sosan\Documents\Dissertation\DataSets\Fifa 17\players_17.csv',encoding='utf-8') as second_file:
+  with open(r'C:\Users\sosan\Documents\Dissertation\DataSets\Fifa 20\fifa_20_data.csv',encoding='utf-8') as second_file:
     FM_data =  csv.DictReader(file, delimiter=',')
     Fifa_data =  csv.DictReader(second_file, delimiter=',')
 
     latest_fm_data = []
     for line in FM_data:
         latest_fm_data.append(line)
+
+    basePositions = []
+
+    for row in Fifa_data:
+      currentPosition = row["team_position"]
+
+      if currentPosition == '' or currentPosition == 'RES' or currentPosition == 'SUB':
+        currentPosition = row["nation_position"]
+        
+        if currentPosition == '':
+          playerPositions = str.split(row["player_positions"], ',')
+          currentPosition = playerPositions[0]
+      
+        
+
+      if currentPosition not in basePositions:
+        basePositions.append(currentPosition)
+
+    print(basePositions)
+
 
     for row in Fifa_data:
       
