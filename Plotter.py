@@ -94,15 +94,23 @@ def plot_Correlation(DataFrame):
     # playerCorrelation.style.background_gradient(cmap='coolwarm')
     # plt.show()
 
-    f, ax = plt.subplots(figsize=(10, 8))
-    sns.heatmap(playerCorrelation, mask=np.zeros_like(playerCorrelation, dtype=np.bool), cmap=sns.diverging_palette(220, 10, as_cmap=True),
-        square=True, ax=ax)
+    f, ax = plt.subplots(figsize=(20, 18))
+    sns.heatmap(playerCorrelation, mask=np.zeros_like(playerCorrelation, dtype=np.bool),
+        square=True, ax=ax, cmap='viridis')
 
     plt.show(sns)
         
     sns.heatmap(playerCorrelation, 
             xticklabels=playerCorrelation.columns.values,
             yticklabels=playerCorrelation.columns.values)
+
+def plotNewCorrelation(DataFrame, targetVariable):
+    k = len(DataFrame.columns)
+    numerical_features_columns = list(DataFrame._get_numeric_data().columns)
+    cols = DataFrame[numerical_features_columns].corr().nlargest(k, targetVariable)[targetVariable].index
+    cm = DataFrame[cols].corr
+    plt.figure(figsize=(10,8))
+    sns.heatmap(cm, annot=True, cmap='viridis')
 
 def scatterPlot(x_Axis, y_Axis, DataFrame):
     plot_Title = "{0} vs {1}".format(x_Axis, y_Axis)

@@ -3,31 +3,10 @@ from datetime import datetime
 import csv
 import numpy as np
 from sklearn import datasets
-
-# def Spliting(DataFrame):
-#     twent_Eighteen = pd.DataFrame()
-#     DataFrame['birthday'] = pd.to_datetime(DataFrame['birthday'])
-#     DataFrame['date'] = pd.to_datetime(DataFrame['date'])
-    
-#     DataFrame = DataFrame[(DataFrame['date'].dt.year == 2016) &  (DataFrame['overall_rating'] >= 85)]
-#     #with open(r'C:\Users\sosan\Documents\Dissertation\DataSets\Fifa 17\players_17.csv',encoding='utf-8') as second_file:
-#     #    Fifa_data =  csv.DictReader(second_file, delimiter=',')
-        
-#     # for index, row in DataFrame.iterrows():
-#     #     if row['overall_rating'] >= 85:
-#     #         if row['date'].year == 2016:
-#     #             print("{0} {1} {2}".format(index, row['player_name'], row['overall_rating']))
-#     #             twent_Eighteen.append(row, ignore_index=False)
-#     # twent_Eighteen = [player for player in DataFrame if player['overall_rating'] >= 85]
-#     # print(twent_Eighteen)
-#     return DataFrame
-
-def Spliting():
-    x, y = datasets.load_iris(return_X_y=True)
-    print(x.shape, y.shape)
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import MinMaxScaler
 
 def convertHeightAndWeight(dataFrame):
-
     for index,player in dataFrame.iterrows():
         height = str.split(player["Height"], "'")
 
@@ -41,6 +20,32 @@ def convertHeightAndWeight(dataFrame):
         
     pd.to_numeric(dataFrame["Height"])
     pd.to_numeric(dataFrame["Weight"])
+    return dataFrame
+
+def ConvertMonetaryValue(dataFrame):
+    for index,player in dataFrame.iterrows():
+        string_Value = player['Value'].replace('€','')
+        if 'M' in string_Value:
+            value = float(string_Value.replace('M', '')) * 1000000
+        
+        if 'K' in string_Value:
+            value = float(string_Value.replace('K', '')) * 1000000
+
+        dataFrame.loc[index, "Value"] = value
+
+        string_wage = player['Wage'].replace('€','')
+        if 'K' in string_wage:
+            wage = float(string_wage.replace('K', '')) * 100000
+        dataFrame.loc[index, "Wage"] = wage
+
+
+        string_release_clause = player['Release Clause'].replace('€','')
+        if 'M' in string_release_clause:
+            release_clause = float(string_release_clause.replace('M', '')) * 1000000
+        if 'K' in string_release_clause:
+            release_clause = float(string_release_clause.replace('K', '')) * 1000000
+
+        dataFrame.loc[index, "Release Clause"] = release_clause
     return dataFrame
 
 def GetAllPositions():
@@ -93,28 +98,7 @@ def getAllPlayersInPosition(arrayOfPosition, PlayerPool):
     
     return players
 
-def Merging(DataFrame):
-    labelledPlayers = DataFrame
-    Fifa_data =  pd.read_csv(r'C:\Users\sosan\Documents\Dissertation\DataSets\Fifa 17\players_17.csv', )
-    Fifa_data['dob'] = pd.to_datetime(Fifa_data['dob'])
-
-    for index, row in DataFrame.iterrows():
-        playerName = row['player_name'].split()
-
-        #search by date of birth and firstname
-        searchResult = Fifa_data[(Fifa_data['dob'].dt.year == row['birthday'].year) & (Fifa_data['dob'].dt.month == row['birthday'].month) & (Fifa_data['dob'].dt.day == row['birthday'].day)]
-        if searchResult.empty == True:
-            continue
-
-        if searchResult.size > 1:
-            searchResultTwo = searchResult[(searchResult['long_name'].str.contains(playerName[0]))]
-            
-            if searchResultTwo.empty == True:
-                searchResultThree = searchResultTwo[(searchResult['long_name'].str.contains(playerName[1]))]
-                
-                if searchResultThree.empty == True:
-                    searchResultThree = searchResultTwo[(searchResult['long_name'].str.contains(playerName[2]))]
-
-        position = searchResult.iloc[0].team_position
-        labelledPlayers.loc[index, 'position'] = position
-    return labelledPlayers
+def standardizeValues(dataFrame):
+    min_max = MinMaxScaler()
+    player = min_max.fit_transform(dataFrame[['Overall', 'Height']])
+    return player

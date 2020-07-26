@@ -3,32 +3,37 @@ import RepositoryFactory as RepoFactory
 import Plotter as plotLib
 import Analysis as analysis
 import pandas as pd
-import DataCleaner as dc
+import FifaDataSetCleaner as fifaCleaner
 import csv
 
 #plotLib.demo()
+(goalkeepersPositions, defenderPositions, midfielderPositions, fowardPositions) = fifaCleaner.GetAllPositions()
+fifaData = pd.read_csv(r'C:\Users\sosan\Documents\Dissertation\DataSets\Fifa 20\fifa_20_data.csv',encoding='utf-8')
+fifaData = fifaCleaner.convertHeightAndWeight(fifaData)
 
-(goalkeepersPositions, defenderPositions, midfielderPositions, fowardPositions) = dc.GetAllPositions()
-data = pd.read_csv(r'C:\Users\sosan\Documents\Dissertation\DataSets\Fifa 20\fifa_20_data.csv',encoding='utf-8')
-data = dc.convertHeightAndWeight(data)
+fifaData = fifaCleaner.ConvertMonetaryValue(fifaData)
 
-defenders = dc.getAllPlayersInPosition(defenderPositions, data)
+arrayOfPositions = [goalkeepersPositions, defenderPositions, midfielderPositions, fowardPositions]
 
-defendersDataFrame = pd.DataFrame(defenders)
-print(defendersDataFrame.info)
-analysis.CorrelationMatrix('Overall', defendersDataFrame)
+for position in arrayOfPositions:
+    players = fifaCleaner.getAllPlayersInPosition(position, fifaData)
+    playerDataFrame = pd.DataFrame(players)
+    fittedData = fifaCleaner.standardizeValues(playerDataFrame)
+    print(fittedData)
+    print(playerDataFrame.info)
+    analysis.CorrelationMatrix('Overall', playerDataFrame)
 
-dbLocation = r'c:\Users\sosan\Documents\Dissertation\DataSets\Season 16-18\database.sqlite'
-conn = RepoFactory.create_connection(dbLocation)
-print(conn)
-#RepoFactory.select_all(conn,'Lionel Messi')
-player_DF = RepoFactory.LeftJoin(conn, 'Player', 'Player_Attributes', 'player_api_id')
-dataFrame = dc.Spliting(player_DF)
-dc.Merging(dataFrame)
+    index = arrayOfPositions.index(position)
+    if index == 0:
+        fileName = 'GoalKeepers'
+    elif index == 1:
+        fileName = 'Defenders'
+    elif index == 2:
+        fileName = 'Midfielders'
+    elif index == 3:
+        fileName = 'Strikers'
 
-#player_DF.to_csv(r'c:\Users\sosan\Documents\Dissertation\DataSets\Season 16-18\Test_Data.csv')
+    #save players in csv file
+    playerDataFrame.to_csv(r'C:\Users\sosan\Documents\Dissertation\DataSets\Fifa 20\{0}.csv'.format(fileName), index = False)
 
-analysis.CorrelationMatrix('Overall', player_DF)
-plotLib.Plot_Radar(player_DF)
-plotLib.plot_Correlation(player_DF)
 print("done!!")
