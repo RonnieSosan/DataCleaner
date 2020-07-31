@@ -18,8 +18,6 @@ arrayOfPositions = [goalkeepersPositions, defenderPositions, midfielderPositions
 for position in arrayOfPositions:
     players = fifaCleaner.getAllPlayersInPosition(position, fifaData)
     playerDataFrame = pd.DataFrame(players)
-    fittedData = fifaCleaner.standardizeValues(playerDataFrame)
-    print(fittedData)
     print(playerDataFrame.info)
     analysis.CorrelationMatrix('Overall', playerDataFrame)
 
@@ -34,6 +32,8 @@ for position in arrayOfPositions:
         fileName = 'Strikers'
 
     #save players in csv file
-    playerDataFrame.to_csv(r'C:\Users\sosan\Documents\Dissertation\DataSets\Fifa 20\{0}.csv'.format(fileName), index = False)
+    playerDataFrame.to_csv(r'C:\Users\sosan\Documents\Dissertation\DataSets\Fifa 20\TransformedData\{0}.csv'.format(fileName), index = False)
 
+    # fittedData = fifaCleaner.standardizeValues(playerDataFrame)
+    # print(fittedData)
 print("done!!")
