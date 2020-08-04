@@ -3,6 +3,7 @@ from datetime import datetime
 import csv
 import numpy as np
 from sklearn import datasets
+from sklearn.model_selection import train_test_split
 
 # def Spliting(DataFrame):
 #     twent_Eighteen = pd.DataFrame()
@@ -22,9 +23,11 @@ from sklearn import datasets
 #     # print(twent_Eighteen)
 #     return DataFrame
 
-def Spliting():
-    x, y = datasets.load_iris(return_X_y=True)
-    print(x.shape, y.shape)
+def Spliting(dataFrame, Target):
+    X_train, X_test, y_train, y_test = train_test_split(dataFrame, Target, test_size=0.2)
+    print (X_train.shape, y_train.shape)
+    print (X_test.shape, y_test.shape)
+    return(X_train, X_test, y_train, y_test)
 
 def convertHeightAndWeight(dataFrame):
 

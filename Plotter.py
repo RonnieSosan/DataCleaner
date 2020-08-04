@@ -87,30 +87,38 @@ def Plot_Radar(DataFrame):
     ax.fill(angles, values, 'b', alpha=0.1)
     plt.show()
 
-def plot_Correlation(DataFrame):
+#makes heat map of correllations
+def PlotCorr(data):
+    """ Make heat map of correlation
+    :param data: dataframe
+    """
+    corr = data.corr()
+    #fig , ax = plt.figure( figsize = (6,6 ) )
+    cmap = sns.diverging_palette( 220 , 10 , as_cmap = True )
+    sns.heatmap(
+        corr, cmap = cmap, square = True, cbar = False, cbar_kws = { 'shrink' : 1 }, 
+     annot = True, annot_kws = { 'fontsize' : 14 }
+    )
+    plt.yticks(rotation = 0)
+    plt.xticks(rotation = 90)
 
-    playerCorrelation = DataFrame.corr()
-    # plt.matshow(playerCorrelation)
-    # playerCorrelation.style.background_gradient(cmap='coolwarm')
-    # plt.show()
-
-    f, ax = plt.subplots(figsize=(20, 18))
-    sns.heatmap(playerCorrelation, mask=np.zeros_like(playerCorrelation, dtype=np.bool),
-        square=True, ax=ax, cmap='viridis')
-
-    plt.show(sns)
-        
-    sns.heatmap(playerCorrelation, 
-            xticklabels=playerCorrelation.columns.values,
-            yticklabels=playerCorrelation.columns.values)
-
-def plotNewCorrelation(DataFrame, targetVariable):
-    k = len(DataFrame.columns)
-    numerical_features_columns = list(DataFrame._get_numeric_data().columns)
-    cols = DataFrame[numerical_features_columns].corr().nlargest(k, targetVariable)[targetVariable].index
-    cm = DataFrame[cols].corr
-    plt.figure(figsize=(10,8))
-    sns.heatmap(cm, annot=True, cmap='viridis')
+#plot top correlatins in a heat map
+def TopCorr(dataFrame, lim):
+    """ plot the top correlations in a heat map
+    :param dataFrame: database file
+    :param dataFrame: dataframe for correlation
+    :param lim: limit of variable to be considered
+    :param title: name of model to be applied
+    :return: a tuple of the model and the summary of the model
+    """
+    corr = dataFrame.corr()
+    cmap = sns.diverging_palette( 220 , 10 , as_cmap = True )
+    #fig , ax = plt.subplots( figsize = (6,6 ) )
+    sns.heatmap(corr[(corr >= lim) | (corr <= -lim)], 
+         vmax = 1.0,  cmap = cmap, vmin = -1.0, square = True, cbar = False, linewidths = 0.2, annot = True, 
+                annot_kws = {"size": 14})
+    plt.yticks(rotation = 0)
+    plt.xticks(rotation = 90)
 
 def scatterPlot(x_Axis, y_Axis, DataFrame):
     plot_Title = "{0} vs {1}".format(x_Axis, y_Axis)

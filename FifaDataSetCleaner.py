@@ -102,3 +102,5 @@ def standardizeValues(dataFrame):
     min_max = MinMaxScaler()
     player = min_max.fit_transform(dataFrame[['Overall', 'Height']])
     return player
+
+
