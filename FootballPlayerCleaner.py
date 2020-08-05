@@ -31,7 +31,6 @@ missing_midfielder_Data = util.Missing(midfield)
 util.SideSide(missing_Defender_Data, missing_midfielder_Data)
 print('Missing Data')
 
-target = 
 X_train, X_test, y_train, y_test = dc.Spliting(defenders, 'BP')
 RF_Model = RandomForestClassifier(max_features = 'sqrt', max_leaf_nodes = 5)
 
