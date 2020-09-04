@@ -15,26 +15,18 @@ arrayOfPositions = [goalkeepersPositions, defenderPositions, midfielderPositions
 
 fifaData = pd.read_csv(r'C:\Users\sosan\Documents\Dissertation\DataSets\Fifa 20\fifa_20_data.csv',encoding='utf-8')
 
-defenders = pd.DataFrame(fifaCleaner.getAllPlayersInPosition(defenderPositions, fifaData))
-midfield = pd.DataFrame(fifaCleaner.getAllPlayersInPosition(midfielderPositions, fifaData))
+fifaData = fifaCleaner.convertHeightAndWeight(fifaData)
+fifaData = fifaCleaner.ConvertMonetaryValue(fifaData)
 
-defenders = fifaCleaner.convertHeightAndWeight(defenders)
-midfield = fifaCleaner.convertHeightAndWeight(midfield)
-defenders = fifaCleaner.ConvertMonetaryValue(defenders)
-midfield = fifaCleaner.ConvertMonetaryValue(midfield)
+#missing_Defender_Data = util.Missing(defenders)
+#missing_midfielder_Data = util.Missing(midfield)
+#util.SideSide(missing_Defender_Data, missing_midfielder_Data)
+#print('Missing Data')
 
-defenders = defenders.fillna(defenders)
-midfield = midfield.fillna(midfield)
+#X_train, X_test, y_train, y_test = dc.Spliting(defenders, 'BP')
+#RF_Model = RandomForestClassifier(max_features = 'sqrt', max_leaf_nodes = 5)
 
-missing_Defender_Data = util.Missing(defenders)
-missing_midfielder_Data = util.Missing(midfield)
-util.SideSide(missing_Defender_Data, missing_midfielder_Data)
-print('Missing Data')
-
-X_train, X_test, y_train, y_test = dc.Spliting(defenders, 'BP')
-RF_Model = RandomForestClassifier(max_features = 'sqrt', max_leaf_nodes = 5)
-
-analysis.ApplyModel(X_train, y_train, RF_Model)
+#analysis.ApplyModel(X_train, y_train, RF_Model)
 
 for position in arrayOfPositions:
     players = fifaCleaner.getAllPlayersInPosition(position, fifaData)

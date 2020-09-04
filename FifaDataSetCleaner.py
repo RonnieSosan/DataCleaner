@@ -79,7 +79,7 @@ def GetAllPositions():
             elif 'M' in position:
                 midfielders.append(position)
             
-            elif 'F' in position or 'S' in position:
+            elif 'F' in position or 'S' in position or position == 'LW' or position == 'RW':
                 fowards.append(position)
         
         return (goalkeepers, defenders, midfielders, fowards)
