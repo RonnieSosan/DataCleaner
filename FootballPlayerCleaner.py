@@ -9,25 +9,21 @@ import csv
 import Utility as util
 from sklearn.ensemble import RandomForestClassifier
 
-#plotLib.demo()
-(goalkeepersPositions, defenderPositions, midfielderPositions, fowardPositions) = fifaCleaner.GetAllPositions()
+#specify the file path for the FIFA sataset
+filePath = r'C:\Users\sosan\Documents\Dissertation\DataSets\Fifa 20\fifa_20_data.csv'
+
+#get all possible playing positions from Fifa dataset
+(goalkeepersPositions, defenderPositions, midfielderPositions, fowardPositions) = fifaCleaner.GetAllPositions(filePath)
 arrayOfPositions = [goalkeepersPositions, defenderPositions, midfielderPositions, fowardPositions]
 
-fifaData = pd.read_csv(r'C:\Users\sosan\Documents\Dissertation\DataSets\Fifa 20\fifa_20_data.csv',encoding='utf-8')
 
+fifaData = pd.read_csv(filePath,encoding='utf-8')
+
+#clean fifa data set convert height, weight and player value
 fifaData = fifaCleaner.convertHeightAndWeight(fifaData)
 fifaData = fifaCleaner.ConvertMonetaryValue(fifaData)
 
-#missing_Defender_Data = util.Missing(defenders)
-#missing_midfielder_Data = util.Missing(midfield)
-#util.SideSide(missing_Defender_Data, missing_midfielder_Data)
-#print('Missing Data')
-
-#X_train, X_test, y_train, y_test = dc.Spliting(defenders, 'BP')
-#RF_Model = RandomForestClassifier(max_features = 'sqrt', max_leaf_nodes = 5)
-
-#analysis.ApplyModel(X_train, y_train, RF_Model)
-
+#save datasets into current file location.
 for position in arrayOfPositions:
     players = fifaCleaner.getAllPlayersInPosition(position, fifaData)
     playerDataFrame = pd.DataFrame(players)

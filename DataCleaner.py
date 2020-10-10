@@ -5,24 +5,6 @@ import numpy as np
 from sklearn import datasets
 from sklearn.model_selection import train_test_split
 
-# def Spliting(DataFrame):
-#     twent_Eighteen = pd.DataFrame()
-#     DataFrame['birthday'] = pd.to_datetime(DataFrame['birthday'])
-#     DataFrame['date'] = pd.to_datetime(DataFrame['date'])
-    
-#     DataFrame = DataFrame[(DataFrame['date'].dt.year == 2016) &  (DataFrame['overall_rating'] >= 85)]
-#     #with open(r'C:\Users\sosan\Documents\Dissertation\DataSets\Fifa 17\players_17.csv',encoding='utf-8') as second_file:
-#     #    Fifa_data =  csv.DictReader(second_file, delimiter=',')
-        
-#     # for index, row in DataFrame.iterrows():
-#     #     if row['overall_rating'] >= 85:
-#     #         if row['date'].year == 2016:
-#     #             print("{0} {1} {2}".format(index, row['player_name'], row['overall_rating']))
-#     #             twent_Eighteen.append(row, ignore_index=False)
-#     # twent_Eighteen = [player for player in DataFrame if player['overall_rating'] >= 85]
-#     # print(twent_Eighteen)
-#     return DataFrame
-
 def Spliting(dataFrame, Target):
     X_train, X_test, y_train, y_test = train_test_split(dataFrame, Target, test_size=0.2)
     print (X_train.shape, y_train.shape)

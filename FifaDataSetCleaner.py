@@ -48,8 +48,8 @@ def ConvertMonetaryValue(dataFrame):
         dataFrame.loc[index, "Release Clause"] = release_clause
     return dataFrame
 
-def GetAllPositions():
-    with open(r'C:\Users\sosan\Documents\Dissertation\DataSets\Fifa 20\fifa_20_data.csv',encoding='utf-8') as second_file:
+def GetAllPositions(filePath):
+    with open(filePath) as second_file:
         Fifa_data =  csv.DictReader(second_file, delimiter=',')
         
         basePositions = []
